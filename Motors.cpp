@@ -1,9 +1,8 @@
 /*
 
 MUST Be INCLUDED IN Main Program 
-Scheduler.startLoop(runMotorLoop);
-
-Motors.runMotorLoop();
+Motors.setup();
+Motors.run(); //Must be called regularly
 
 AccelStepper leftMotor(AccelStepper::DRIVER, 7, 6);
 AccelStepper rightMotor(AccelStepper::DRIVER, 5, 4);
@@ -24,13 +23,28 @@ Motors::Motors(AccelStepper leftMotor, AccelStepper rightMotor) {
   float _rightSpeed = 500; //default _rightSpeed
 }
 
+void Motors::setSpeeds (float leftSpeed, float rightSpeed) {
+    _leftMotor.setSpeed(leftSpeed);
+    _rightMotor.setSpeed(rightSpeed);
+  }
+
+void Motors::setAccelerations (float leftAcceleration, float rightAcceleration) {
+    _leftMotor.setAcceleration(leftAcceleration);
+    _rightMotor.setAcceleration(rightAcceleration);
+}
+
+void Motors::setMaxSpeeds (float leftMaxSpeed, float rightMaxSpeed) {
+      _leftMotor.setMaxSpeed(leftMaxSpeed);
+      _rightMotor.setSpeed(rightMaxSpeed);
+	}
+
 //Definition of Movement related functions
 long Motors::cmToSteps(float cm)
 {
   return (long)((cm * 1600.0)/(6.46 * 3.14159265358979));
 }
 
-boolean Motors::motorsRunning() {
+boolean Motors::running() {
   if (_leftMotor.distanceToGo() != 0 || _rightMotor.distanceToGo() != 0) {
     return true;
   }
@@ -45,7 +59,7 @@ void Motors::straight(float cm) {
 }
 
 void Motors::rotate(float deg) {//positive rotates Right, negative rotates Left
-  _leftMotor.move(cmToSteps((deg/360.0)*3.14159265358979*13.75)); //Note that 13.99 is the 'diameter' that gives the most accurate movement for a 360 rotate
+  _leftMotor.move(cmToSteps((deg/360.0)*3.14159265358979*13.75)); //Note that 13.75 is the diameter that gives the most accurate movement for a 360 rotate
   _rightMotor.move(cmToSteps((deg/360.0)*3.14159265358979*13.75));
 }
 
@@ -59,7 +73,7 @@ void Motors::swingWithLeft(float deg) {//Positive turns Right, Negative turns Le
   _leftMotor.move(cmToSteps((deg/360.0)*3.14159265358979*13.75*2));
 }
 
-void Motors::setMotorSpeeds(float leftSpeed, float rightSpeed) {
+void Motors::setActiveSpeeds(float leftSpeed, float rightSpeed) {
   
   _leftSpeed = leftSpeed;
   _rightSpeed = rightSpeed;
@@ -97,13 +111,15 @@ void Motors::setup()
   _rightMotor.setMaxSpeed(900);
   _leftMotor.setAcceleration(10000);
   _rightMotor.setAcceleration(10000);
-
-  _leftMotor.setSpeed(_leftSpeed);//Must be set once to allow movement, setSpeed(float) should be called after moveTo, not needed to be called after move()
+  _leftMotor.setSpeed(_leftSpeed);//Must be set once to allow movement, setSpeed(float, float) should be called after moveTo, not needed to be called after move()
   _rightMotor.setSpeed(_rightSpeed);//Must be set once to allow movement
 }
 
-void Motors::runMotorLoop() {
+void Motors::wait() {
+  while(running()) yield(); //Should be able to put running() here, but it didn't seem to work...
+}
+
+void Motors::run() {
   _leftMotor.run();
   _rightMotor.run();  
-  yield();
 }

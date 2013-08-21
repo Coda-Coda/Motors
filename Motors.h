@@ -12,10 +12,14 @@ class Motors
     void rotate(float deg);
     void swingWithRight (float deg);
     void swingWithLeft(float deg);
-    void setMotorSpeeds(float leftSpeed, float rightSpeed);
+    void setActiveSpeeds(float leftSpeed, float rightSpeed);
     void setup();
-    void runMotorLoop();
-    boolean motorsRunning();
+    void run();
+	void wait();
+    boolean running();
+	void setSpeeds (float leftSpeed, float rightSpeed);
+	void setAccelerations (float righttAcceleration, float rightAcceleration);
+	void setMaxSpeeds (float leftMaxSpeed, float rightMaxSpeed);
   private:
     long cmToSteps(float cm);
 	float _leftSpeed;
