@@ -1,3 +1,9 @@
+/* Fully Functional For controlling 2 Stepper motors on a robot using the Accelstepper library
+By Daniel Britten
+Released into the public domain
+V1.0
+*/
+
 /*
 
 MUST Be INCLUDED IN Main Program 
