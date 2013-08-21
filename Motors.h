@@ -2,24 +2,26 @@
 #define Motors_h
 
 #include "Arduino.h"
+#include "AccelStepper.h"
 
 class Motors
 {
   public:
-    AccelStepper leftMotor(AccelStepper::DRIVER, 7, 6);
-    AccelStepper rightMotor(AccelStepper::DRIVER, 5, 4);
-    float leftSpeed;
-    float rightSpeed;
+    Motors(AccelStepper, AccelStepper);
     void straight(float cm);
     void rotate(float deg);
     void swingWithRight (float deg);
     void swingWithLeft(float deg);
-    void setMotorSpeeds();
+    void setMotorSpeeds(float leftSpeed, float rightSpeed);
     void setup();
     void runMotorLoop();
     boolean motorsRunning();
   private:
     long cmToSteps(float cm);
+	float _leftSpeed;
+    float _rightSpeed;
+	AccelStepper _leftMotor;
+    AccelStepper _rightMotor;
 };
 
 #endif
